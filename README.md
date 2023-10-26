@@ -3,4 +3,4 @@ Projeto final da fase 1 da Pós Tech FIAP que engloba os conhecimentos obtidos e
 
 
 [Clique aqui para ter acesso a aplicação - primeira](https://techchallengevinicolafase1.streamlit.app/)
-[Clique aqui para ter acesso a aplicação - segunda](https://techchallengevinicolafase1.streamlit.app/)
+
