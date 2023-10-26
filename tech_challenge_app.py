@@ -7,7 +7,7 @@ import seaborn as sns
 pd.options.display.float_format = '{:,.2f}'.format
 import streamlit as st
 
-st.write('# Tech Challenge Vinhos')
+st.write('# Tech Challenge Vinícola')
 
 #Criando o layout da aplicação
 tab0, tab1, tab2 = st.tabs(["Limpeza", "Análise inicial", "Estudo"])
@@ -323,17 +323,117 @@ with tab1:
     
 
 with tab2:
+
+    dados = pd.read_csv("ExpVinho.csv",encoding="utf-8-sig", sep=";",thousands=".", decimal=",")
+    quantidade = ['País','2008','2009','2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022']
+    df_quantidade = dados[quantidade].copy()
+    dados2 = df_quantidade.set_index("País")
+    dados2["Total"] = dados2.sum(axis=1)
+    dados_ordenados = dados2.sort_values("Total", ascending=False)
+    dados_mensal = dados_ordenados.drop(columns=["Total"])
+    valores = ['País','2010.1', '2011.1', '2012.1', '2013.1', '2014.1', '2015.1', '2016.1', '2017.1', '2018.1', '2019.1', '2020.1', '2021.1', '2022.1']
+    df_valores = dados[valores].copy()
+    dados_valores2 = df_valores.set_index("País")
+    dados_valores2["Total"] = dados_valores2.sum(axis=1)
+    dados_ordenados_vl = dados_valores2.sort_values("Total", ascending=False)
+    dados_mensal_vl = dados_ordenados_vl.drop(columns=["Total"])
+    base_vl_qtd = pd.merge(dados_ordenados, dados_ordenados_vl, on='País')
+    colunas_usaveis = ['Total_x', 'Total_y']
+    base_totais = base_vl_qtd[colunas_usaveis].copy()
+    base_totais["PPL"] = base_totais['Total_x']/base_totais['Total_y']
+    quantidade_set = ['País','2008','2009','2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022']
+    df_quantidade_set = exportacao[quantidade].copy()
+    qtd_set01 = df_quantidade.set_index("País")
+    qtd_set01["Total"] = qtd_set01.sum(axis=1)
+    qtd_set02 = qtd_set01.sort_values("Total", ascending=False)
+    qtd_set03 = qtd_set02.drop(columns=["Total"])
+
+
     st.write('### Estudo')
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    exportacao_long_por_pais.head(10).plot(kind='bar', ax=ax)
-    st.pyplot(fig)
+    col1, col2 = st.columns(2)
 
-    st.write('Nos últimos 15 anos, o Brasil exportou 87.982.432 litros de vinho, totalizando o valor de U$$ 112.644.316,00. Os maiores consumidores de vinhos brasileiros são Paraguai e Rússia. Os 10 países que mais compraram do Brasil nos últimos 15 anos foram: Paraguai, Rússia, Estados Unidos, China, Reino Unido, Espanha, Países Baixos, Alemanha, Japão, Haiti')
+    with col1:
+        st.write('Teste')
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    exportacao_long_por_dolar_por_litro = exportacao_long_por_pais.head(10)
-    exportacao_long_por_dolar_por_litro = exportacao_long_por_dolar_por_litro.sort_values(by='dolar_por_litro', ascending=False)
-    exportacao_long_por_dolar_por_litro.head(5).plot(kind='bar', y='dolar_por_litro', ax=ax)
+    with col2:
+        cores = ['red', 'blue', 'pink', 'orange', 'yellow']
+        grafico_vl = dados_ordenados_vl.head(5).plot( y='Total', kind='bar', color=cores, title='Valores Exportação Vinhos')
+        fig1 = grafico_vl.get_figure()
+        st.pyplot(fig1)
 
-    st.pyplot(fig) 
+    col3, col4 = st.columns(2)
+
+    with col3:
+        cores = ['red', 'blue', 'pink', 'orange', 'yellow']
+        grafico1 = dados_ordenados.head(5).plot( y='Total', kind='bar', color=cores, title='Quantidade (Litros) Exportação Vinhos')
+        fig1 = grafico1.get_figure()
+        st.pyplot(fig1)
+
+    with col4:
+        st.write('Teste')
+
+    col5, col6 = st.columns(2)
+
+    with col5:
+        st.write('Teste')
+
+    with col6:
+        dados_ordenados2 = dados_mensal / 1000
+        axis = dados_ordenados2.head(5).T.plot(figsize=(10, 6))
+        fig = plt.gcf()  # Obtém a figura atual
+        st.pyplot(fig)
+
+
+    col7, col8 = st.columns(2)
+
+    with col7:
+        fig, ax = plt.subplots(figsize=(10, 6))
+        exportacao_long_por_dolar_por_litro = exportacao_long_por_pais.head(10)
+        exportacao_long_por_dolar_por_litro = exportacao_long_por_dolar_por_litro.sort_values(by='dolar_por_litro', ascending=False)
+        exportacao_long_por_dolar_por_litro.head(5).plot(kind='bar', y='dolar_por_litro', ax=ax)
+        st.pyplot(fig)
+
+    with col8:
+        st.write('teste') 
+
+    col9, col10 = st.columns(2)
+    with col9:
+        st.markdown("<p style='text-align: center;'><br><br><br><br><br>Nos últimos 15 anos, o Brasil exportou 87.982.432 litros de vinho, totalizando o valor de U$$ 112.644.316,00.<br> Os maiores consumidores de vinhos brasileiros são Paraguai e Rússia. Os 10 países que mais compraram do Brasil nos últimos 15 anos foram: Paraguai, Rússia, Estados Unidos, China, Reino Unido, Espanha, Países Baixos, Alemanha, Japão, Haiti.</p>", unsafe_allow_html=True)
+
+    with col10:
+        fig, ax = plt.subplots(figsize=(5, 3))
+        columns_to_plot = ['quantidade_l', 'valor_uss']
+        bar_width = 1.2
+        data = exportacao_long_por_pais.head(10)
+        
+        # Defina a largura das barras (ajuste o valor conforme necessário)
+        data.plot(kind='bar', ax=ax, color=['blue', 'green'], width=bar_width)
+        
+        ax.legend(labels=['Quantidade (litros)', 'Valor (em US$)'])
+        ax.set_xticklabels(data.index, rotation=45, fontsize=5)
+        st.pyplot(fig)
+
+    col11, col12 = st.columns(2)
+    with col11:
+        dados_ordenados2_vl = dados_mensal_vl / 1000
+        axis = dados_ordenados2_vl.head(5).T.plot(figsize=(10, 6))
+        fig1 = plt.gcf()  # Obtém a figura atual
+        st.pyplot(fig1)
+
+    with col12:
+        st.markdown("")
+    
+    
+    col13, col14 = st.columns(2)
+    with col13:
+        st.markdown("teste")
+
+    with col14:
+        qtd_set04 = qtd_set03 / 1000
+        fig, ax = plt.subplots(figsize=(10, 6))
+        qtd_set04.head(5).T.plot(kind='line', ax=ax, title='Exportação')
+        ax.axhline(y=5900, color='r', linestyle='-')
+        st.pyplot(fig)
+
+ 
