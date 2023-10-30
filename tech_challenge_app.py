@@ -10,7 +10,7 @@ import streamlit as st
 st.write('# Tech Challenge Vinícola')
 
 #Criando o layout da aplicação
-tab0, tab1, tab2 = st.tabs(["Limpeza", "Análise inicial", "Estudo"])
+tab0, tab1, tab2 = st.tabs(["Limpeza", "Análise inicial", "Apresentação do negócio:"])
 
 with tab0:
     st.write('### Limpeza')
@@ -349,34 +349,41 @@ with tab2:
     qtd_set03 = qtd_set02.drop(columns=["Total"])
 
 
-    st.write('### Estudo')
+    st.write('### Relatórios iniciais')
+    st.markdown('<p style="text-align: center;"> Analisando os dados de exportação dos produtos da vinícola vitivinicultura, baseando-se nos últimos 15 anos e tendo como país de origem o Brasil. <br> Os países que lideram a exportação de vinhos dos anos em questão, com um montante em quantidade e valores expressivos como contribuintes do lucro brasileiro em vinhos são: Paraguai, Rússia, Estados Unidos, Reino Unido, China e Espanha. Estes são os países que estão em maior evidência como mostram os gráficos. <br>Obtivemos os seguintes pontos que consideramos relevantes e que destacamos de forma visual para uma leitura mais eficaz dos dados coletados conforme apresentado abaixo.</p>', unsafe_allow_html=True)
+    st.markdown("---")
 
     col1, col2 = st.columns(2)
-
+    st.markdown("---")
     with col1:
-        st.write('Teste')
+        st.markdown('<br><br><br>', unsafe_allow_html=True) 
+        st.markdown('<p style="text-align: center;">Este gráfico representa os cinco principais países que o Brasil exportou vinho nos últimos 15 anos, baseado no valor total de compra por país. É possível observar que o Paraguai se destaca com o valor total de exportação de vinhos comparado aos outros países. Em seguida temos a Rússia com um valor de compra superior a 15 milhões e o gráfico segue uma tendência decrescente a China que possui valor inferior comparado aos demais.</p>', unsafe_allow_html=True)
 
     with col2:
         cores = ['red', 'blue', 'pink', 'orange', 'yellow']
         grafico_vl = dados_ordenados_vl.head(5).plot( y='Total', kind='bar', color=cores, title='Valores Exportação Vinhos')
         fig1 = grafico_vl.get_figure()
+        plt.xticks(rotation=45)
         st.pyplot(fig1)
 
     col3, col4 = st.columns(2)
-
+    st.markdown("---")
     with col3:
         cores = ['red', 'blue', 'pink', 'orange', 'yellow']
         grafico1 = dados_ordenados.head(5).plot( y='Total', kind='bar', color=cores, title='Quantidade (Litros) Exportação Vinhos')
         fig1 = grafico1.get_figure()
+        plt.xticks(rotation=45)
         st.pyplot(fig1)
 
     with col4:
-        st.write('Teste')
+        st.markdown('<br><br><br>', unsafe_allow_html=True) 
+        st.markdown('<p style="text-align: center;">Ao lado temos a representação de exportação de vinhos do Brasil por quantidade em litros exportada entre os cinco principais países em nossa amostra de dados. Por essa medição a Rússia ultrapassa o Paraguai diferente do primeiro gráfico, concluindo-se que apesar do valor de compra do Paraguai ser superior, a Rússia em quantidades por litros é maior.</p>', unsafe_allow_html=True)
 
     col5, col6 = st.columns(2)
-
+    st.markdown("---")
     with col5:
-        st.write('Teste')
+        st.markdown('<br><br><br>', unsafe_allow_html=True) 
+        st.markdown('<p style="text-align: center;">O gráfico representa o valor exportado aos países por ano. É possível identificar que a Rússia se destaca em alguns períodos como maior cliente no ramo da exportação do Brasil e passa a dividir essa posicão com o Paraguai nos próximos anos.</p>', unsafe_allow_html=True)
 
     with col6:
         dados_ordenados2 = dados_mensal / 1000
@@ -384,22 +391,24 @@ with tab2:
         fig = plt.gcf()  # Obtém a figura atual
         st.pyplot(fig)
 
-
     col7, col8 = st.columns(2)
-
+    st.markdown("---")
     with col7:
         fig, ax = plt.subplots(figsize=(10, 6))
         exportacao_long_por_dolar_por_litro = exportacao_long_por_pais.head(10)
         exportacao_long_por_dolar_por_litro = exportacao_long_por_dolar_por_litro.sort_values(by='dolar_por_litro', ascending=False)
         exportacao_long_por_dolar_por_litro.head(5).plot(kind='bar', y='dolar_por_litro', ax=ax)
+        plt.xticks(rotation=45)
         st.pyplot(fig)
 
     with col8:
-        st.write('teste') 
+        st.markdown('<br><br><br>', unsafe_allow_html=True) 
+        st.markdown('<p style="text-align: center;">Esse gráfico traz a visão de vendas mais lucrativas para o Brasil, analisando quantidade em dolar por litro fornecido aos países descritos no gráfico. O obtendo um lucro acima de 3.5 milhões de dólares pelo Reino Unido, como o maior contribuinte desse lucro, seguido dos Países baixos, Alemanha, Estados Unidos e Japão.</p>', unsafe_allow_html=True)
 
     col9, col10 = st.columns(2)
+    st.markdown("---")
     with col9:
-        st.markdown("<p style='text-align: center;'><br><br><br><br><br>Nos últimos 15 anos, o Brasil exportou 87.982.432 litros de vinho, totalizando o valor de U$$ 112.644.316,00.<br> Os maiores consumidores de vinhos brasileiros são Paraguai e Rússia. Os 10 países que mais compraram do Brasil nos últimos 15 anos foram: Paraguai, Rússia, Estados Unidos, China, Reino Unido, Espanha, Países Baixos, Alemanha, Japão, Haiti.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center;'><br><br><br><br><br>Nos últimos 15 anos, o Brasil exportou 87.982.432 litros de vinho, totalizando o valor de U$$ 112.644.316,00.<br> Os maiores consumidores de vinhos brasileiros são Paraguai e Rússia. O gráfico representa a quantidade de exportação do total do Brasil em cada país por quantidade em litros e o valor em dólar. Os 10 países que mais compraram do Brasil nos últimos 15 anos foram: Paraguai, Rússia, Estados Unidos, China, Reino Unido, Espanha, Países Baixos, Alemanha, Japão, Haiti.</p>", unsafe_allow_html=True)
 
     with col10:
         fig, ax = plt.subplots(figsize=(5, 3))
@@ -415,25 +424,24 @@ with tab2:
         st.pyplot(fig)
 
     col11, col12 = st.columns(2)
+    st.markdown("---")
+
     with col11:
-        dados_ordenados2_vl = dados_mensal_vl / 1000
-        axis = dados_ordenados2_vl.head(5).T.plot(figsize=(10, 6))
-        fig1 = plt.gcf()  # Obtém a figura atual
-        st.pyplot(fig1)
-
-    with col12:
-        st.markdown("")
-    
-    
-    col13, col14 = st.columns(2)
-    with col13:
-        st.markdown("teste")
-
-    with col14:
         qtd_set04 = qtd_set03 / 1000
         fig, ax = plt.subplots(figsize=(10, 6))
         qtd_set04.head(5).T.plot(kind='line', ax=ax, title='Exportação')
         ax.axhline(y=5900, color='r', linestyle='-')
         st.pyplot(fig)
 
+    with col12:
+        st.markdown("<p style='text-align: center;'><br><br>O gráfico representa o valor exportado aos países por ano. É possível identificar que a representatividade da Rússia nos gráficos anteriores é devido aos picos de compras ocorridos entre os anos 2008-2010 e 2011-2014 como é possível visualizar ao lado. Se estabiliza após a queda e se mantém em uma linha linear de exportação, enquanto o Paraguai tem uma crescente a partir de 2016 e que se mantém em um aumento gradativo até o ano de 2022. Um país com grande potencial podemos ter de ganho para exportação de vinho no Brasil.</p>", unsafe_allow_html=True)
+    
+    
+    st.markdown("<p style='text-align: center;'><br><br>Conclusão dos estudos comparativos dos dados onde construímos nossa análise, foi que o Brasil lucra um valor total na exportação em vinícolas de 87.982.432 litros de vinho, totalizando o valor de U$$ 112.644.316,00. Entre os países de maior índice de exportação e importação sugerimos o Paraguai como melhor opção para investimento do Brasil para lucros no mercado de exportação, pela sua tendência crescente e continua ao longo dos anos e pela escassez de importação devido à falta de produtos brutos para comercio de vinho no país. </p>", unsafe_allow_html=True)
+
  
+st.markdown("# Integrantes do grupo")
+st.markdown("* Ariane Santana Barros - rm352052")
+st.markdown("* Lana Morgado Martinez - rm349562")
+st.markdown("* Paula Pereira dos Santos - Rm350669")
+st.markdown("* Talita Silvestre Matias de Oliveira - rm352443")
