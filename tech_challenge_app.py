@@ -1,5 +1,8 @@
 # bibliotecas
 
+
+
+
 import pandas as pd
 pd.plotting.register_matplotlib_converters()
 import matplotlib.pyplot as plt
@@ -10,9 +13,9 @@ import streamlit as st
 st.write('# Tech Challenge Vinícola')
 
 #Criando o layout da aplicação
-tab0, tab1, tab2 = st.tabs(["Limpeza", "Análise inicial", "Apresentação do negócio:"])
+tab0, tab1, tab2 = st.tabs(["Apresentação do negócio:", "Limpeza", "Análise inicial"])
 
-with tab0:
+with tab1:
     st.write('### Limpeza')
 
     #mostrando o meu código python dentro do meu layout
@@ -41,7 +44,7 @@ with tab0:
     st.code(codigo_python, language='python')
 
     # Subindo e tratando os dados
-    exportacao = pd.read_csv('ExpVinho.csv', sep=';')
+    exportacao = pd.read_csv('https://github.com/arianesannt/dados/raw/main/ExpVinho.csv', sep=';')
     exportacao_visualizador = pd.DataFrame(exportacao)
 
     # excluindo a coluna 'Id', porque não é uma informação útil para a análise
@@ -160,8 +163,168 @@ with tab0:
     
     st.dataframe(exportacao_long, use_container_width=True)
     st.dataframe(exportacao_long.describe(), use_container_width=True)
+
+    st.write('### Análises iniciais')
+
+    #mostrando o meu código python dentro do meu layout
+    codigo_python ="""
+    exportacao_long_por_pais = exportacao_long.groupby(by='pais_destino').sum(numeric_only=True)
+    exportacao_long_por_pais = exportacao_long_por_pais.sort_values(by='valor_uss', ascending=False)
+    exportacao_long_por_pais.sum()
+    """
+    st.code(codigo_python, language='python')
+
+    exportacao_long_por_pais = exportacao_long.groupby(by='pais_destino').sum(numeric_only=True)
+    exportacao_long_por_pais = exportacao_long_por_pais.sort_values(by='valor_uss', ascending=False)
+
+    st.dataframe(exportacao_long_por_pais.sum(), use_container_width=True)
+
+    #mostrando o meu código python dentro do meu layout
+    codigo_python ="""
+    exportacao_long_por_pais_top10 = exportacao_long_por_pais.head(10)
+    exportacao_long_por_pais_top10 = exportacao_long_por_pais_top10.reset_index('pais_destino')
+    exportacao_long_por_pais_top10.head()
+    """
+    st.code(codigo_python, language='python')
+
+    exportacao_long_por_pais_top10 = exportacao_long_por_pais.head(10)
+    exportacao_long_por_pais_top10 = exportacao_long_por_pais_top10.reset_index('pais_destino')
+
+    st.dataframe(exportacao_long_por_pais_top10, use_container_width=True)
+
+    #mostrando o meu código python dentro do meu layout
+    codigo_python ="""
+    df_aux = pd.read_excel('codigo_iso-alpha_top10_paises_importadores_vinho.xlsx')
+    df_aux.head
+    """
+    st.code(codigo_python, language='python')
+
+    df_aux = pd.read_csv('https://github.com/arianesannt/dados/raw/main/codigo_iso-alpha_top10_paises_importadores_vinho.csv', sep=';', encoding='latin1')
+
+    st.dataframe(df_aux, use_container_width=True)
+
+    #mostrando o meu código python dentro do meu layout
+    codigo_python ="""
+    # fazendo o .join() entre as duas tabelas para tranasformá-la em uma só
+    exportacao_long_por_pais_top10 = exportacao_long_por_pais_top10.join(df_aux[['cod_num', 'iso_alpha']])
+    exportacao_long_por_pais_top10.head()
+    """
+    st.code(codigo_python, language='python')
+
+    # fazendo o .join() entre as duas tabelas para tranasformá-la em uma só
+    exportacao_long_por_pais_top10 = exportacao_long_por_pais_top10.join(df_aux[['cod_num', 'iso_alpha']])
+    exportacao_long_por_pais_top10.head()
+
+    st.dataframe(exportacao_long_por_pais_top10, use_container_width=True)
+
+    #mostrando o meu código python dentro do meu layout
+    codigo_python ="""
+    exportacao_long_por_pais_top10['pais_origem'] = 'Brasil'
+    exportacao_long_por_pais_top10.head()
+    """
+    st.code(codigo_python, language='python')
+
+    exportacao_long_por_pais_top10['pais_origem'] = 'Brasil'
+
+    st.dataframe(exportacao_long_por_pais_top10, use_container_width=True)
+
+    st.write('_________________________________________________________')
+
+    #mostrando o meu código python dentro do meu layout
+    codigo_python ="""
+    exportacao_long_por_pais['dolar_por_litro'] = exportacao_long_por_pais['valor_uss'] / exportacao_long_por_pais['quantidade_l']
+    exportacao_long_por_pais.head()
+    """
+    st.code(codigo_python, language='python')
+
+    # fazendo o .join() entre as duas tabelas para tranasformá-la em uma só
+    exportacao_long_por_pais['dolar_por_litro'] = exportacao_long_por_pais['valor_uss'] / exportacao_long_por_pais['quantidade_l']
+    exportacao_long_por_pais.head(10)
+
+    st.dataframe(exportacao_long_por_pais, use_container_width=True)
+
+    #mostrando o meu código python dentro do meu layout
+    codigo_python ="""
+    # incluindo a coluna total nos dataframe
+    quantidade_l["Total_quantidade"] = quantidade_l.sum(axis=1)
+    valor_uss["Total_valor"] = valor_uss.sum(axis=1)
+    """
+    st.code(codigo_python, language='python')
+
+    # incluindo a coluna total nos dataframe
+    quantidade_l["Total_quantidade"] = quantidade_l.sum(axis=1)
+    valor_uss["Total_valor"] = valor_uss.sum(axis=1)
+
+    st.dataframe(quantidade_l, use_container_width=True)
+    st.dataframe(valor_uss, use_container_width=True)
+
+    #mostrando o meu código python dentro do meu layout
+    codigo_python ="""
+    # criando dataframe com paises que não compraram vinho do brasil
+    paises_comercio_zero = valor_uss[valor_uss['Total_valor'] == 0]
+    paises_comercio_zero
+    """
+    st.code(codigo_python, language='python')
+
+    # incluindo a coluna total nos dataframe
+    paises_comercio_zero = valor_uss[valor_uss['Total_valor'] == 0]
+
+    st.dataframe(paises_comercio_zero, use_container_width=True)
+
+    #mostrando o meu código python dentro do meu layout
+    codigo_python ="""
+    # retirando dos dataframe quantidade_l e valor_uss os países que não compraram vinho com o brasil
+    quantidade_l_s = quantidade_l.drop(paises_comercio_zero.index, axis=0)
+    valor_uss_s = valor_uss.drop(paises_comercio_zero.index, axis=0)
+
+    # ordenando por maior quantidade e maior valor
+    quantidade_l_ordenado_por_total = quantidade_l_s.sort_values(by='Total_quantidade', ascending = False)
+    valor_uss_s_ordenado_por_total = valor_uss_s.sort_values(by='Total_valor', ascending = False)
     
-with tab1:
+    # passo 1: retirando a coluna total dos dataframes
+    quantidade_l_ordenado_por_total = quantidade_l_ordenado_por_total.drop('Total_quantidade', axis=1)
+    valor_uss_s_ordenado_por_total = valor_uss_s_ordenado_por_total.drop('Total_valor', axis=1)
+
+    # passo 2: criando um dataframe com 10 países que mais compraram vinho do brasil
+    quantidade_l_ordenado_por_total_top10 = quantidade_l_ordenado_por_total.head(10)
+    valor_uss_s_ordenado_por_total_top10 = valor_uss_s_ordenado_por_total.head(10)
+
+    # passo 3: transpondo os dataframe para que seja possível visualizar a serie temporal
+    quantidade_l_ordenado_por_total_top10 = quantidade_l_ordenado_por_total_top10.T
+    valor_uss_s_ordenado_por_total_top10 = valor_uss_s_ordenado_por_total_top10.T
+
+    # passo 4: mostrando os dataframes
+    display(quantidade_l_ordenado_por_total_top10.head(2))
+    display(valor_uss_s_ordenado_por_total_top10.head(2))
+    """
+    st.code(codigo_python, language='python')
+
+    # retirando dos dataframe quantidade_l e valor_uss os países que não compraram vinho com o brasil
+    quantidade_l_s = quantidade_l.drop(paises_comercio_zero.index, axis=0)
+    valor_uss_s = valor_uss.drop(paises_comercio_zero.index, axis=0)
+
+    # ordenando por maior quantidade e maior valor
+    quantidade_l_ordenado_por_total = quantidade_l_s.sort_values(by='Total_quantidade', ascending = False)
+    valor_uss_s_ordenado_por_total = valor_uss_s.sort_values(by='Total_valor', ascending = False)
+
+    # passo 1: retirando a coluna total dos dataframes
+    quantidade_l_ordenado_por_total = quantidade_l_ordenado_por_total.drop('Total_quantidade', axis=1)
+    valor_uss_s_ordenado_por_total = valor_uss_s_ordenado_por_total.drop('Total_valor', axis=1)
+
+    # passo 2: criando um dataframe com 10 países que mais compraram vinho do brasil
+    quantidade_l_ordenado_por_total_top10 = quantidade_l_ordenado_por_total.head(10)
+    valor_uss_s_ordenado_por_total_top10 = valor_uss_s_ordenado_por_total.head(10)
+
+    # passo 3: transpondo os dataframe para que seja possível visualizar a serie temporal
+    quantidade_l_ordenado_por_total_top10 = quantidade_l_ordenado_por_total_top10.T
+    valor_uss_s_ordenado_por_total_top10 = valor_uss_s_ordenado_por_total_top10.T
+
+    st.dataframe(quantidade_l_ordenado_por_total_top10, use_container_width=True)
+    st.dataframe(valor_uss_s_ordenado_por_total_top10, use_container_width=True)
+
+    
+
+with tab2:
     st.write('### Análises iniciais')
 
     #mostrando o meu código python dentro do meu layout
@@ -320,11 +483,9 @@ with tab1:
     st.dataframe(quantidade_l_ordenado_por_total_top10, use_container_width=True)
     st.dataframe(valor_uss_s_ordenado_por_total_top10, use_container_width=True)
 
-    
 
-with tab2:
-
-    dados = pd.read_csv("ExpVinho.csv",encoding="utf-8-sig", sep=";",thousands=".", decimal=",")
+with tab0:
+    dados = pd.read_csv("https://github.com/arianesannt/dados/raw/main/ExpVinho.csv",encoding="utf-8-sig", sep=";",thousands=".", decimal=",")
     quantidade = ['País','2008','2009','2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022']
     df_quantidade = dados[quantidade].copy()
     dados2 = df_quantidade.set_index("País")
@@ -439,6 +600,9 @@ with tab2:
     
     st.markdown("<p style='text-align: center;'><br><br>Conclusão dos estudos comparativos dos dados onde construímos nossa análise, foi que o Brasil lucra um valor total na exportação em vinícolas de 87.982.432 litros de vinho, totalizando o valor de U$$ 112.644.316,00. Entre os países de maior índice de exportação e importação sugerimos o Paraguai como melhor opção para investimento do Brasil para lucros no mercado de exportação, pela sua tendência crescente e continua ao longo dos anos e pela escassez de importação devido à falta de produtos brutos para comercio de vinho no país. </p>", unsafe_allow_html=True)
 
+    
+    
+    
  
 st.markdown("# Integrantes do grupo")
 st.markdown("* Ariane Santana Barros - rm352052")
