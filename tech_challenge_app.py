@@ -11,7 +11,7 @@ import streamlit as st
 st.write('# Tech Challenge Vinícola')
 
 #Criando o layout da aplicação
-tab0, tab1, tab2 = st.tabs(["Apresentação do negócio:", "Limpeza", "Análise inicial"])
+tab0, tab1, tab2 = st.tabs(["Apresentação do negócio", "Limpeza", "Análise inicial"])
 
 with tab1:
     st.write('### Limpeza')
