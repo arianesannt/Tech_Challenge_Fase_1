@@ -1,10 +1,8 @@
 # bibliotecas
 
-
-
-
 import pandas as pd
 pd.plotting.register_matplotlib_converters()
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
 pd.options.display.float_format = '{:,.2f}'.format
@@ -44,7 +42,7 @@ with tab1:
     st.code(codigo_python, language='python')
 
     # Subindo e tratando os dados
-    exportacao = pd.read_csv('https://github.com/arianesannt/dados/raw/main/ExpVinho.csv', sep=';')
+    exportacao = pd.read_csv('ExpVinho.csv', sep=';')
     exportacao_visualizador = pd.DataFrame(exportacao)
 
     # excluindo a coluna 'Id', porque não é uma informação útil para a análise
@@ -199,7 +197,7 @@ with tab1:
     """
     st.code(codigo_python, language='python')
 
-    df_aux = pd.read_csv('https://github.com/arianesannt/dados/raw/main/codigo_iso-alpha_top10_paises_importadores_vinho.csv', sep=';', encoding='latin1')
+    df_aux = pd.read_csv('codigo_iso-alpha_top10_paises_importadores_vinho.csv', sep=';', encoding='UTF-8')
 
     st.dataframe(df_aux, use_container_width=True)
 
@@ -270,6 +268,7 @@ with tab1:
     paises_comercio_zero = valor_uss[valor_uss['Total_valor'] == 0]
 
     st.dataframe(paises_comercio_zero, use_container_width=True)
+
 
     #mostrando o meu código python dentro do meu layout
     codigo_python ="""
@@ -360,7 +359,7 @@ with tab2:
     """
     st.code(codigo_python, language='python')
 
-    df_aux = pd.read_csv('codigo_iso-alpha_top10_paises_importadores_vinho.csv', sep=';', encoding='latin1')
+    df_aux = pd.read_csv('codigo_iso-alpha_top10_paises_importadores_vinho.csv', sep=';', encoding='UTF-8')
 
     st.dataframe(df_aux, use_container_width=True)
 
@@ -485,7 +484,7 @@ with tab2:
 
 
 with tab0:
-    dados = pd.read_csv("https://github.com/arianesannt/dados/raw/main/ExpVinho.csv",encoding="utf-8-sig", sep=";",thousands=".", decimal=",")
+    dados = pd.read_csv("ExpVinho.csv",encoding="utf-8-sig", sep=";",thousands=".", decimal=",")
     quantidade = ['País','2008','2009','2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022']
     df_quantidade = dados[quantidade].copy()
     dados2 = df_quantidade.set_index("País")
